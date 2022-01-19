@@ -1,13 +1,21 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan 18 19:33:53 2022
+@author: Vinamra Yadav
+"""
+
 from yahoo_fin import stock_info as si
 from yahoo_fin import news
+import requests
 from tqdm import tqdm
 from time import sleep
 import pprint as p
 from art import *
 
-
-task = ["live price","company info","historical data","top gainers","top loosers","top crypto","trending today","news","quit"]
+task = ["live price", "company info", "historical data", "top gainers", "top loosers", "top crypto", "trending today",
+        "news", "quit"]
 task_len = len(task)
+
 
 def progress():
     for i in tqdm(range(101),
@@ -15,22 +23,27 @@ def progress():
                   ascii=False, ncols=75):
         sleep(0.01)
 
+
 def error1():
     print("Check your internet connection")
     print("Check for your input")
 
+
 def start():
     print("Hi what can i do for you?"
           "\nMAIN MENU")
+
     for i in range(task_len):
         print(f"{i + 1}). {task[i]}")
     operation = input("Choose the operation:")
+
     operation = operation.lower()
     operation_type(operation)
 
 
 def live_price():
     stock_name = input("enter stock nse code:")
+
     try:
         current_Price = si.get_live_price(stock_name)
         print(f"Current price of {stock_name} is {current_Price}")
@@ -44,6 +57,7 @@ def live_price():
 
 def About():
     stock_name = input("enter stock nse code:")
+
     try:
         status = si.get_company_info(stock_name)
         print(status)
@@ -62,8 +76,9 @@ def historical_data():
     end_date = input("Enter end date:")
     interval = input("Set Interval\n Available Intervals\n daily\n week\n month"
                      "\n Select interval:")
+
     try:
-        data = si.get_data(stock_name,start_date,end_date,interval)
+        data = si.get_data(stock_name, start_date, end_date, interval)
         print(data)
         progress()
         start()
@@ -71,6 +86,7 @@ def historical_data():
         print("Something Went Wrong... Try Again Later")
         error1()
         author()
+
 
 def top_gainers():
     try:
@@ -104,6 +120,7 @@ def top_crypto():
         print("Something Went Wrong... Try Again Later")
         author()
 
+
 def trending():
     try:
         trend = si.get_day_most_active()
@@ -114,14 +131,16 @@ def trending():
         print("Something Went Wrong... Try Again Later")
         author()
 
+
 def News():
     stock_name = input("Enter stock nse code:")
+
     try:
         tnews = news.get_yf_rss(stock_name)
         for i in range(5):
             trend = tnews[i]
             trend = trend["link"]
-            p.pprint(f"News {i+1}). {trend}")
+            p.pprint(f"News {i + 1}). {trend}")
         progress()
         start()
     except:
@@ -133,9 +152,10 @@ def News():
 def operation_type(operation):
     if operation in task:
         print(f"You selected {operation}")
+
         if operation == "live price":
             live_price()
-        
+
         elif operation == "company info":
             About()
         elif operation == "historical data":
@@ -152,7 +172,7 @@ def operation_type(operation):
             News()
         elif operation == "quit":
             confirmation = input("Would you like to close the program?"
-                  "\nEnter y if yes or any key if no:")
+                                 "\nEnter y if yes or any key if no:")
             if confirmation == "y":
                 author()
                 quit()
@@ -166,9 +186,28 @@ def operation_type(operation):
         progress()
         start()
 
+
 def author():
     print("Author:")
     tprint("Vinamra Yadav", "3-d")
 
-start()
 
+def internet_check():
+    interval = 1
+
+    try:
+        requests.head("http://www.google.com/", timeout=interval)
+        print('Internet Connection Successful')
+        start()
+    except requests.ConnectionError:
+        print("Unable to connect")
+
+
+internet_check()
+
+"""
+     
+       .__(.)< (QUACK🎵-QUACK🎵)
+        \___)   
+        
+"""
